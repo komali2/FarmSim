@@ -40,6 +40,7 @@ public class Game extends Canvas implements Runnable
 		field = new Field(ss);
 		mouse = new Mouse(this);
 		keyboard = new Keyboard(this);
+		System.out.println(30/mouse.getWaterCap()*3);
 	}
 	
 	public synchronized void start()			//starts game
@@ -223,6 +224,16 @@ public class Game extends Canvas implements Runnable
 		if(mouse.getToolImg() != null)
 		{
 			g.drawImage(mouse.getToolImg(), xPlot*TILE_SIZE, 0, null);
+			
+			if(mouse.getCursorState() == Mouse.WATER_CAN)
+			{
+				g.setColor(Color.black);
+				g.drawRect(260, 40, 20, 32);
+				g.setColor(Color.blue);
+				int waterHeight = (int)(30/mouse.getWaterCap()*mouse.getWaterLevel());
+				g.fillRect(261, 72-waterHeight, 19, waterHeight);
+				
+			}
 		}
 		
 		//RENDER END

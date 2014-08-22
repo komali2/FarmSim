@@ -12,6 +12,7 @@ public class Plug
 	protected Rectangle hitbox;			// not useful yet
 	protected long plantTime;			// time the plug was created/updated
 	protected double value;				// money value of plot
+	private boolean isStructure;
 	public double price;
 	
 	public Plug(int id, int x, int y, SpriteSheet ss)
@@ -38,6 +39,11 @@ public class Plug
 		watered = true;
 	}
 	
+	public boolean isStructure()
+	{
+		return isStructure;
+	}
+	
 	protected void update(int id)
 	{
 		this.id = id;
@@ -45,6 +51,7 @@ public class Plug
 		value = 0.0;
 		price = 0.0;
 		watered = false;
+		isStructure = false;
 		
 		switch(id)
 		{
@@ -96,12 +103,15 @@ public class Plug
 		case Field.WELL:
 			sx=7;
 			sy=0;
+			isStructure = true;
+			price = 100.00;
+			value = 50.00;
 			break;
 			
 		case Field.DEAD:
 			sx=8;
 			sy=0;
-			value = 0.0;
+			value = 1.00;
 			break;
 
 		default:

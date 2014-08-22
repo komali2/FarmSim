@@ -15,9 +15,9 @@ public class Inventory extends JFrame
 	
 	JPanel panel;
 	
-	JButton hoe, sickle, waterCan, wheat, potato;
+	JButton hoe, sickle, waterCan, wheat, potato, hammer;
 	
-	public Inventory(Game instance)
+	public Inventory(final Game instance)
 	{
 		this.instance = instance;
 		
@@ -86,6 +86,16 @@ public class Inventory extends JFrame
 			}
 		});
 		panel.add(potato);
+		
+		hammer = new JButton("Hammer");
+		hammer.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				instance.mouse.setCursor(4);
+			}
+		});
+		panel.add(hammer);
 		
 		add(panel);
 	}
