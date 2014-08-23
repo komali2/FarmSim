@@ -15,7 +15,7 @@ public class Inventory extends JFrame
 	
 	JPanel panel;
 	
-	JButton hoe, sickle, waterCan, wheat, potato, hammer;
+	JButton hoe, sickle, waterCan, wheat, potato, hammer, identify;
 	
 	public Inventory(final Game instance)
 	{
@@ -30,6 +30,7 @@ public class Inventory extends JFrame
 		panel.setLayout(layout);
 		
 		hoe = new JButton("Hoe");
+		hoe.setToolTipText("Turn grass into dirt!");
 		hoe.addActionListener(new ActionListener()
 		{
 			@Override
@@ -41,6 +42,7 @@ public class Inventory extends JFrame
 		panel.add(hoe);
 		
 		sickle = new JButton("Sickle");
+		sickle.setToolTipText("Harvest adult crops for $$$!");
 		sickle.addActionListener(new ActionListener()
 		{
 			@Override
@@ -52,6 +54,7 @@ public class Inventory extends JFrame
 		panel.add(sickle);
 		
 		waterCan = new JButton("Watering Can");
+		waterCan.setToolTipText("Don't forget to water!");
 		waterCan.addActionListener(new ActionListener()
 		{
 			@Override
@@ -96,6 +99,16 @@ public class Inventory extends JFrame
 			}
 		});
 		panel.add(hammer);
+		
+		identify = new JButton("Identify");
+		identify.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				instance.mouse.setCursor(Mouse.IDENTIFY);
+			}
+		});
+		panel.add(identify);
 		
 		add(panel);
 	}

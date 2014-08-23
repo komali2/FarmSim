@@ -5,16 +5,21 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JTextArea;
+
 public class Mouse implements MouseListener, MouseMotionListener, MouseWheelListener
 {
 	
 	Game instance;
-	final public static int HOE = 0, SICKLE = 1, SEED = 2, WATER_CAN = 3, HAMMER = 4;
-	private int cursorState;
-	private BufferedImage toolImg = null, hoeImg, sickleImg, seedsImg, waterCanImg, hammerImg;
+	final public static int HOE = 0, SICKLE = 1, SEED = 2, WATER_CAN = 3, HAMMER = 4, IDENTIFY = 5;
+	private int cursorState = -1;
+	private BufferedImage toolImg = null, hoeImg, sickleImg, seedsImg, waterCanImg, hammerImg, identifyImg, noToolImg;
 	private int seedID;
 	private int waterLevel = 0, waterCap = 3;
 	int xMouseLocation, yMouseLocation;
+	
+	JTextArea text;
+	
 	public Mouse(Game instance)
 	{
 		this.instance = instance;
@@ -26,6 +31,12 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 		seedsImg = instance.gfx.load("Seeds.png");
 		waterCanImg = instance.gfx.load("WaterCan.png");
 		hammerImg = instance.gfx.load("Hammer.png");
+		identifyImg = instance.gfx.load("Identify.png");
+		noToolImg = instance.gfx.load("NoTool.png");
+		
+		text = new JTextArea("poop");
+		text.setEditable(false);
+		instance.toolTip.add(text);
 	}
 
 	public void setSeedID(int id)
@@ -61,11 +72,19 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 			
 		case WATER_CAN:
 			toolImg = waterCanImg;
-			default:
 			break;
 			
 		case HAMMER:
 			toolImg = hammerImg;
+			break;
+			
+		case IDENTIFY:
+			toolImg = identifyImg;
+			break;
+			
+		default:
+			toolImg = noToolImg;
+			break;
 		}
 		cursorState = id;
 	}
@@ -93,6 +112,7 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 	@Override
 	public void mouseClicked(MouseEvent me)
 	{
+		instance.toolTip.setVisible(false);
 		int x = me.getX() - Game.xOffset;
 		xMouseLocation = me.getX();
 		x = (int)((x-(x%Game.TILE_SIZE))/(Game.TILE_SIZE*Game.SCALE));
@@ -122,11 +142,11 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 			if(instance.field.plots[x][y].id == Field.WELL)
 			{
 				waterLevel = waterCap;
-				System.out.println(waterLevel);
 				Game.bank -= 1.00;
 			}
 			else if(waterLevel > 0 && !instance.field.plots[x][y].watered && !instance.field.plots[x][y].isStructure())
 			{
+				instance.field.plots[x][y].setWaterTime(System.currentTimeMillis());
 				instance.field.plots[x][y].water();
 				spendWater();
 			}
@@ -150,17 +170,31 @@ public class Mouse implements MouseListener, MouseMotionListener, MouseWheelList
 			{
 				System.out.println("BUILD SOMETHING!!!");
 			}
+			
+		case IDENTIFY:
+			if(!instance.field.plots[x][y].isStructure())
+			{
+				instance.toolTip.setBounds(xMouseLocation, yMouseLocation, 50, 50);
+				text.setText(instance.field.plots[x][y].getName());
+				instance.toolTip.setVisible(true);
+			}
+			break; 
 		}
 	}
 	
-	public void sell(Plug plug)
+	public void sell(Plug plug)				// add value to bank!
 	{
 		Game.bank += plug.value;
 	}
 	
-	public void buy(Plug plug)
+	public void buy(Plug plug)				// subtract price from bank!
 	{
 		Game.bank -= plug.price;
+	}
+	
+	public void updateText()
+	{
+		text.setText(text.getText());
 	}
 
 	@Override

@@ -11,9 +11,11 @@ public class Plug
 	protected SpriteSheet ss;
 	protected Rectangle hitbox;			// not useful yet
 	protected long plantTime;			// time the plug was created/updated
+	protected long waterTime;
 	protected double value;				// money value of plot
 	private boolean isStructure;
 	public double price;
+	private String name = "Grass";
 	
 	public Plug(int id, int x, int y, SpriteSheet ss)
 	{
@@ -22,6 +24,11 @@ public class Plug
 		this.x = x*Game.TILE_SIZE;
 		this.y = y*Game.TILE_SIZE;
 		this.ss = ss;	
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public void saveID()
@@ -39,9 +46,24 @@ public class Plug
 		watered = true;
 	}
 	
+	public void dry()
+	{
+		watered = false;
+	}
+	
 	public boolean isStructure()
 	{
 		return isStructure;
+	}
+	
+	public void setPlantTime(long time)
+	{
+		plantTime = time;
+	}
+	
+	public void setWaterTime(long time)
+	{
+		waterTime = time;
 	}
 	
 	protected void update(int id)
@@ -50,51 +72,59 @@ public class Plug
 		plantTime = System.currentTimeMillis();
 		value = 0.0;
 		price = 0.0;
-		watered = false;
+		//watered = false;
 		isStructure = false;
 		
 		switch(id)
 		{
 		case Field.GRASS:
+			name = "Grass";
 			sx=0;
 			sy=0;
 			plantTime = 0;
 			break;
 			
 		case Field.DIRT:
+			name = "Dirt";
 			sx=1;
 			sy=0;
 			break;
 			
 		case Field.WHEAT_SEED:
+			name = "Wheat";
 			sx=2;
 			sy=0;
 			price = 3.00;
 			break;
 			
 		case Field.POTATO_SEED:
+			name = "Potato";
 			sx=2;
 			sy=0;
 			price = 50.00;
 			break;
 			
 		case Field.WHEAT_SAPLING:
+			name = "Wheat";
 			sx=3;
 			sy=0;
 			break;
 			
 		case Field.POTATO_SAPLING:
+			name = "Potato";
 			sx=5;
 			sy=0;
 			break;
 			
 		case Field.WHEAT:
+			name = "Wheat";
 			sx=4;
 			sy=0;
 			value = 5.00;
 			break;
 			
 		case Field.POTATO:
+			name = "Potato";
 			sx=6;
 			sy=0;
 			value = 100.00;
@@ -109,6 +139,7 @@ public class Plug
 			break;
 			
 		case Field.DEAD:
+			name = "Dead Plant";
 			sx=8;
 			sy=0;
 			value = 1.00;

@@ -6,6 +6,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
+import javax.swing.JWindow;
 
 public class Game extends Canvas implements Runnable
 {
@@ -16,6 +17,7 @@ public class Game extends Canvas implements Runnable
 	public static boolean running = false;	//game running
 	public Thread gameThread;				// ???
 	public static double bank = 10.00;						// money owned
+	
 	
 	public int tickCounter;					// counts seconds
 	public static double priceMod = 1.00;			// price modifier for supply/demand (not implemented yet!)
@@ -29,18 +31,21 @@ public class Game extends Canvas implements Runnable
 	Mouse mouse;
 	Keyboard keyboard;
 	long startTime;
+	JWindow toolTip;
 	
-	public void init()
+	public void init()			//Initialized (runs ONCE at beginning of program)
 	{
 		startTime = System.currentTimeMillis();
 		gfx = new Graphix();
 		inventory = new Inventory(this);
 		spriteSheet = gfx.load("SpriteSheet.png");
 		ss = new SpriteSheet(spriteSheet);
+		toolTip = new JWindow();
+		toolTip.setOpacity(0.5f);
 		field = new Field(ss);
 		mouse = new Mouse(this);
 		keyboard = new Keyboard(this);
-		System.out.println(30/mouse.getWaterCap()*3);
+
 	}
 	
 	public synchronized void start()			//starts game
@@ -108,6 +113,11 @@ public class Game extends Canvas implements Runnable
 		{
 			for(int y = 0; y < yPlot; y++)
 			{
+				if(timesUp(75, field.plots[x][y].waterTime))		// plots drys out after some time
+				{
+					field.plots[x][y].dry();
+				}
+				
 				switch(field.plots[x][y].id)
 				{
 				case Field.GRASS:
@@ -219,6 +229,7 @@ public class Game extends Canvas implements Runnable
 			}
 		}
 		
+		g.setColor(Color.ORANGE);
 		g.drawString(("$" + Double.toString(bank)), 10, 10);
 		
 		if(mouse.getToolImg() != null)
