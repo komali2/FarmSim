@@ -1,3 +1,3 @@
 FarmSim
 =======
-Um. I am noob. Hello!
+A farming simulator game currently under construction, being worked on by Caleb Rogers and Riley Harrington.
